@@ -1,0 +1,12 @@
+<template name="board">
+  <div class="board">
+    <h3>The Stage</h3>
+    {{> canvas}}
+  </div>
+  <div class="output">
+    <h3>Game Output</h3>
+    {{#each cell}}
+      {{> cellItem}}
+    {{/each}}
+  </div>
+</template>
