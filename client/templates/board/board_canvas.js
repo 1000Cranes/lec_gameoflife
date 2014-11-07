@@ -1,35 +1,14 @@
 var _canvas;
 var _context;
 
-// var cellsData = [
-//   {
-//     cell: '5:5',
-//    alive: true,
-//    x: 5,
-//    y: 5,
-//    numberOfNeighbors: 8,
-//     neighbors: new Array('4:4','4:5','4:6','5:4','5:6','6:4','6:5','6:6'),
-//     aliveNeighbors: new Array('4:4','6:6')
-//   }, 
-//   {
-//     cell: '4:4',
-//    alive: true,
-//    x: 4,
-//    y: 4,
-//    numberOfNeighbors: 8,
-//     neighbors: new Array('3:3','3:4','3:5','4:3','4:5','5:3','5:4','5:5'),
-//     aliveNeighbors: new Array('5:5')
-//   }, 
-//   {
-//     cell: '6:6',
-//    alive: true,
-//    x: 6,
-//    y: 6,
-//    numberOfNeighbors: 8,
-//     neighbors: new Array('5:5','5:6','5:7','6:5','6:7','7:5','7:6','7:7'),
-//     aliveNeighbors: new Array('5:5')
-//   }
-// ];
+Template.canvas.events({
+  'click' : function (event) {
+    // template data, if any, is available in 'this'
+//     if (! Meteor.userId()) // must be logged in to add cells
+//       return;
+    handleClick(event);
+  }
+});
 
 Template.canvas.rendered = function (event) {
   _canvas = $('#canvas');
@@ -47,6 +26,29 @@ Template.canvas.rendered = function (event) {
 
   });
 };
+
+function handleClick(e)
+{
+  var cellId = getCellId(e);
+
+  if(cellId.split(',')[0] === "-1" ||
+    cellId.split(',')[1] === "-1" ||
+    cellId.split(',')[0] === "29" ||
+    cellId.split(',')[1] === "29")
+  {
+    return; //Not a vaild cell
+  }
+  alert(cellId);
+  fillCell(cellId, _context, '#000000');
+//   Meteor.call('addCell',{
+//     ID: cellId,
+//     color: "#5d34ea",
+//     x: cellId.split(',')[0],
+//     y: cellId.split(',')[1]
+//   }, function(error, cell){
+//     alert(error);
+//   });
+}
 
 function drawGrid(context)
 {
@@ -89,7 +91,7 @@ function getCellId(event)
   x = Math.floor(Math.floor(x) / 20);
   y = Math.floor(Math.floor(y) / 20);
 
-  return x + ',' + y;
+  return x + ':' + y;
 }
 
 function fillCell(cellId, context, color)
