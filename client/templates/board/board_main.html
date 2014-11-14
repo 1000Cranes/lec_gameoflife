@@ -1,12 +1,23 @@
 <template name="board">
-  <div class="board">
-    <h3>The Stage</h3>
-    {{> canvas}}
-  </div>
-  <div class="output">
-    <h3>Game Output</h3>
+    <div class="output col-md-4">
+    <h3>Instructions</h3>
+      <p>Click on the cell to activate it.</p>
+    <h3>Controls</h3>
+      {{#if game.gameStarted}}
+      <p><button type="button" class="btn btn-default">New Game</button></p>
+      {{else}}
+      <p><button type="button" class="btn btn-success">Start Game</button></p>
+      {{/if}}  
+    <h4>Game Output</h4>
+    {{#each game}}
+      {{> gameItem}}
+    {{/each}}
     {{#each cell}}
       {{> cellItem}}
     {{/each}}
+  </div>
+  <div class="board col-md-8">
+    <h3>The Stage</h3>
+    {{> canvas}}
   </div>
 </template>

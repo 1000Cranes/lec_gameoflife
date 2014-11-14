@@ -30,24 +30,42 @@ Template.canvas.rendered = function (event) {
 function handleClick(e)
 {
   var cellId = getCellId(e);
-
-  if(cellId.split(',')[0] === "-1" ||
-    cellId.split(',')[1] === "-1" ||
-    cellId.split(',')[0] === "29" ||
-    cellId.split(',')[1] === "29")
+  var gameStarted = Games.findOne().gameStarted;
+  if(cellId.split(':')[0] === "-1" ||
+     cellId.split(':')[1] === "-1" ||
+     cellId.split(':')[0] === "29" ||
+     cellId.split(':')[1] === "29")
   {
     return; //Not a vaild cell
   }
-  alert(cellId);
-  fillCell(cellId, _context, '#000000');
-//   Meteor.call('addCell',{
-//     ID: cellId,
-//     color: "#5d34ea",
-//     x: cellId.split(',')[0],
-//     y: cellId.split(',')[1]
-//   }, function(error, cell){
-//     alert(error);
-//   });
+  
+  if(gameStarted)
+    return; //No clicks allowed when game is started
+  
+  if(Cells.find({cell: cellId}).count() > 0){
+    //That cell has already been selected
+    fillCell(cellId, _context, '#FFFFFF');
+    Meteor.call('removeCell',{
+      ID: cellId,
+      x: cellId.split(':')[0],
+      y: cellId.split(':')[1],
+      gameStarted: gameStarted
+    }, function(error, cell){
+      if(error !== undefined)
+        alert("error: " + error);
+    });
+  } else {
+    fillCell(cellId, _context, '#000000');
+    Meteor.call('addCell',{
+      ID: cellId,
+      x: cellId.split(':')[0],
+      y: cellId.split(':')[1],
+      gameStarted: gameStarted
+    }, function(error, cell){
+      if(error !== undefined)
+        alert("error: " + error);
+    });
+  }
 }
 
 function drawGrid(context)
